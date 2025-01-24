@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'http://192.168.1.41:5000';
+  static const String baseUrl = 'https://node-xfev.onrender.com';
 
   static const String loginUrl = '$baseUrl/login';
   static const String resetPasswordUrl = '$baseUrl/reset-password';

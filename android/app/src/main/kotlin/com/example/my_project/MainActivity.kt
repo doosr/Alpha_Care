@@ -1,6 +1,5 @@
-package com.example.my_project
+package com.dawser.AlphaCare; // Update this line
 
-import io.flutter.embedding.android.FlutterActivity
-
+import io.flutter.embedding.android.FlutterActivity;
 class MainActivity: FlutterActivity() {
 }

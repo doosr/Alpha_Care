@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_project/main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:rive/rive.dart';
 
@@ -120,6 +123,10 @@ class _signupFormState extends State<signupForm> {
   late SMITrigger check;
   late SMITrigger error;
   late SMITrigger reset;
+  // Location variables
+  String selectedCity = '';
+  LatLng? selectedLocation;
+  final TextEditingController _locationController = TextEditingController();
 
   late SMITrigger confetti;
   final TextEditingController _usrNameController = TextEditingController();
@@ -151,6 +158,148 @@ class _signupFormState extends State<signupForm> {
     confetti = controller.findInput<bool>("Trigger explosion") as SMITrigger;
   }
 
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          widget.isArabic
+              ? "خدمات الموقع معطلة"
+              : widget.isFrench
+              ? "Services de localisation désactivés"
+              : "Location services are disabled",
+        ),
+      ));
+      return false;
+    }
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            widget.isArabic
+                ? "تم رفض أذونات الموقع"
+                : widget.isFrench
+                ? "Autorisations de localisation refusées"
+                : "Location permissions are denied",
+          ),
+        ));
+        return false;
+      }
+    }
+    return true;
+  }
+  // Future<String> fetchCityNameFromNominatim(double latitude, double longitude) async {
+  //   final url =
+  //       'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude';
+  //
+  //   final response = await http.get(Uri.parse(url));
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     return data['address']['city'] ??
+  //         data['address']['town'] ??
+  //         data['address']['village'] ??
+  //         'Unknown location';
+  //   } else {
+  //     throw Exception('Failed to fetch city name');
+  //   }
+  // }
+
+  // Rechercher la ville en fonction du nom
+  Future<void> _searchCity(String cityName) async {
+    if (cityName.isEmpty) return;
+
+    try {
+      // Recherche de la ville via l'API de géocodage
+      List<Location> locations = await locationFromAddress(cityName);
+      if (locations.isNotEmpty) {
+        setState(() {
+          selectedLocation = LatLng(locations.first.latitude, locations.first.longitude);
+          selectedCity = cityName;  // Mise à jour de la ville sélectionnée
+          _locationController.text = cityName;  // Mise à jour du champ de texte
+        });
+      }
+    } catch (e) {
+      print("Erreur lors de la recherche de la ville : $e");
+    }
+  }
+
+  // Affiche la carte pour choisir l'emplacement
+  Future<void> _showLocationPicker() async {
+    final LatLng initialPosition = selectedLocation ?? LatLng(0.0, 0.0);
+
+    final LatLng? result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        LatLng selectedPos = initialPosition;
+        return AlertDialog(
+          title: Text(
+            widget.isArabic ? "حدد موقعك" : widget.isFrench ? "Sélectionnez votre emplacement" : "Select your location",
+          ),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: initialPosition,
+                zoom: 15,
+              ),
+              onTap: (LatLng pos) {
+                selectedPos = pos;
+              },
+              markers: {
+                Marker(
+                  markerId: const MarkerId('selected'),
+                  position: selectedPos,
+                )
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                widget.isArabic ? "إلغاء" : widget.isFrench ? "Annuler" : "Cancel",
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, selectedPos),
+              child: Text(
+                widget.isArabic ? "تأكيد" : widget.isFrench ? "Confirmer" : "Confirm",
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        selectedLocation = result;
+        _locationController.text = "Loading..."; // Affichage d'un texte de chargement
+      });
+
+      // Géocodage inversé pour obtenir le nom de la ville
+      String cityName = await fetchCityNameFromNominatim(result.latitude, result.longitude);
+      setState(() {
+        selectedCity = cityName;
+        _locationController.text = cityName; // Mise à jour de l'emplacement avec le nom complet de la ville
+      });
+    }
+  }
+
+  // Fonction pour obtenir le nom de la ville en utilisant les coordonnées (géocodage inversé)
+  Future<String> fetchCityNameFromNominatim(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      return placemarks.isNotEmpty ? placemarks.first.locality ?? "" : "Unknown";
+    } catch (e) {
+      return "Error fetching city";
+    }
+  }
+
+
   void signup() async {
     setState(() {
       isShowLoading = true;
@@ -176,7 +325,11 @@ class _signupFormState extends State<signupForm> {
               'fullname': _prenombebeController.text,
               'datenaissance': _DatenaissanceController.text
             };
-
+            if (selectedOption == 'Medecin' && selectedLocation != null) {
+              userData['city'] = selectedCity;
+              userData['latitude'] = selectedLocation!.latitude;
+              userData['longitude'] = selectedLocation!.longitude;
+            }
             // Envoi des données utilisateur au serveur
             try {
               final response = await http.post(
@@ -312,9 +465,65 @@ class _signupFormState extends State<signupForm> {
                     return null;
                   },
                 ),
-
-
+                if (selectedOption == 'Medecin') ...[
+                  const SizedBox(height: 16),
                   Text(
+                    widget.isArabic
+                        ? "المدينة"
+                        : widget.isFrench
+                        ? "Ville"
+                        : "City",
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                    child: TextFormField(
+                      controller: _locationController,
+                      readOnly: false,  // Permet l'édition de l'emplacement
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return widget.isArabic
+                              ? "الرجاء تحديد موقعك"
+                              : widget.isFrench
+                              ? "Veuillez sélectionner votre emplacement"
+                              : "Please select your location";
+                        }
+                        return null;
+                      },
+                      onChanged: (value) async {
+                        if (value.isNotEmpty) {
+                          // Rechercher la localisation via l'API de géocodage pour compléter la saisie de l'utilisateur
+                          try {
+                            List<Location> locations = await locationFromAddress(value);
+                            if (locations.isNotEmpty) {
+                              setState(() {
+                                selectedLocation = LatLng(locations.first.latitude, locations.first.longitude);
+                              });
+                            }
+                          } catch (e) {
+                            print("Erreur de géocodage : $e");
+                          }
+                        }
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Icon(Icons.location_on),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.map),
+                          onPressed: _showLocationPicker,  // Affiche la carte pour choisir un emplacement
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+
+                Text(
                    widget.isArabic ? "الاسم و اللقب" : widget.isFrench ?"Nom et Prenom" : "First and last name",
 
                   style: const TextStyle(color: Colors.black54),

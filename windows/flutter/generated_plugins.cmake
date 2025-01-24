@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   flutter_localization
   flutter_secure_storage_windows
+  geolocator_windows
   rive_common
   share_plus
   url_launcher_windows

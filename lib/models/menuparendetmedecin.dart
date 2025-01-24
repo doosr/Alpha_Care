@@ -36,6 +36,14 @@ List<Menu> sidebarMenus = [
         artboard: "CHAT",
         stateMachineName: "CHAT_Interactivity"),
   ),
+  // Menu(
+  //   title: "Maintenance",
+  //   rive: RiveModel(
+  //       src: "assets/RiveAssets/icons.riv",
+  //       artboard: "MAINTENANCE",  // Assurez-vous d'avoir un artboard pour la maintenance
+  //       stateMachineName: "MAINTENANCE_Interactivity"),  // Et un état de machine d'animation pour la maintenance
+  // ),
+
 ];
 List<Menu> sidebarMenus2 = [
 
@@ -71,7 +79,16 @@ List<Menu> sidebarMenus1 = [
         artboard: "CHAT",
         stateMachineName: "CHAT_Interactivity"),
   ),
+  // Menu(
+  //   title: "Maintenance",
+  //   rive: RiveModel(
+  //       src: "assets/RiveAssets/icons.riv",
+  //       artboard: "MAINTENANCE",  // Assurez-vous d'avoir un artboard pour la maintenance
+  //       stateMachineName: "MAINTENANCE_Interactivity"),  // Et un état de machine d'animation pour la maintenance
+  // ),
+
 ];
+
 List<Menu> sidebarMenus3 = [
 
   Menu(
@@ -81,4 +98,5 @@ List<Menu> sidebarMenus3 = [
         artboard: "BELL",
         stateMachineName: "BELL_Interactivity"),
   ),
+
 ];

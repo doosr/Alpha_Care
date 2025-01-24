@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../../maintennace carte.dart';
 import 'invitationn/invitationboutton.dart';
 import 'liste bebe/medecin.dart';
 import '../../models/menuparendetmedecin.dart';
@@ -164,6 +165,18 @@ class _SideBarState extends State<SideBar1> {
                   });
                   }
                   }
+                  // else if (menu.title == "Maintenance") {
+                  //
+                  //   if(userType=='Medecin') {
+                  //     Future.delayed(const Duration(milliseconds: 200), () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) =>  MaintenancePage()),
+                  //       );
+                  //     });
+                  // //   }
+                  // }
 
                 },
                 riveOnInit: (artboard) {

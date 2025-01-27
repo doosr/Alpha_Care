@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:my_project/Home/medecin/mesengerr/doctor_screen.dart';
 
 import '../../maintennace carte.dart';
 import 'invitationn/invitationboutton.dart';
@@ -164,6 +165,18 @@ class _SideBarState extends State<SideBar1> {
                   );
                   });
                   }
+                  }
+                  else if (menu.title == "Messenger") {
+                    if(userType=='Medecin') {
+                      Future.delayed(const Duration(milliseconds: 200), () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DoctorMessenger()),
+                        );
+                      });
+                    }
+
                   }
                   // else if (menu.title == "Maintenance") {
                   //

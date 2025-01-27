@@ -5,8 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../../../Home/medecin/mesengerr/doctor_screen.dart';
 import '../../../Home/parent/Scannbebe/scannbebee.dart';
 import '../../../Home/parent/cherchermedecin/searchmedecinn.dart';
+import '../../../Home/parent/messenger/parent_messenger.dart';
 import '../../../Home/parent/notificationparent/notificationparent.dart';
 import '../../../Home/parent/rendez_vous/rendezvous.dart';
 import '../../../models/menuparendetmedecin.dart';
@@ -169,7 +171,21 @@ class _SideBarState extends State<SideBar> {
                     }
 
                   }
+
+                  else if (menu.title == "Messenger") {
+                    if(userType=='Parent') {
+                      Future.delayed(const Duration(milliseconds: 200), () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ParentMessenger()),
+                        );
+                      });
+                    }
+
+                  }
                 },
+
                 riveOnInit: (artboard) {
                   menu.rive.status = RiveUtils.getRiveInput(artboard,
                       stateMachineName: menu.rive.stateMachineName);

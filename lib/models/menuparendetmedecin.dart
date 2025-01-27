@@ -36,6 +36,13 @@ List<Menu> sidebarMenus = [
         artboard: "CHAT",
         stateMachineName: "CHAT_Interactivity"),
   ),
+  Menu(
+    title: "Messenger",
+    rive: RiveModel(
+        src: "assets/RiveAssets/icons.riv",
+        artboard: "CHAT",
+        stateMachineName: "CHAT_Interactivity"),
+  ),
   // Menu(
   //   title: "Maintenance",
   //   rive: RiveModel(
@@ -86,6 +93,13 @@ List<Menu> sidebarMenus1 = [
   //       artboard: "MAINTENANCE",  // Assurez-vous d'avoir un artboard pour la maintenance
   //       stateMachineName: "MAINTENANCE_Interactivity"),  // Et un état de machine d'animation pour la maintenance
   // ),
+  Menu(
+    title: "Messenger",
+    rive: RiveModel(
+        src: "assets/RiveAssets/icons.riv",
+        artboard: "CHAT",
+        stateMachineName: "CHAT_Interactivity"),
+  ),
 
 ];
 

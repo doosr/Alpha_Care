@@ -2,7 +2,8 @@
 
 ## Description
 
-Le backend de l'application **AlphaCare**, une solution IoT intelligente dédiée à la **santé et au suivi médical des bébés**. Ce backend gère l'authentification, les comptes utilisateurs (parents et médecins), les profils de bébés, les rendez-vous médicaux, ainsi que toutes les données de suivi de santé (température, poids, soins, etc.).
+AlphaCare est une application mobile développée avec Flutter, visant à améliorer la gestion des soins des enfants. Elle offre une plateforme où les médecins et les parents peuvent se connecter et interagir facilement. L'application inclut des interfaces pour les comptes des médecins et des parents, permettant une gestion efficace des informations de santé et des rendez-vous.
+
 
 ## Fonctionnalités principales
 

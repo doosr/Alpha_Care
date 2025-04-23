@@ -30,26 +30,9 @@ AlphaCare est une application mobile développée avec Flutter, visant à améli
 ### 1. Clone le dépôt
 
 ```bash
-git clone [https://github.com/doosr/alphacare.git](https://github.com/doosr/backend-AlphaCare)
-cd backend-AlphaCare
+git clone https://github.com/doosr/backend-AlphaCare
+cd AlphaCare
 ```
-
-### 2. Installation des dépendances backend
-
-Dans le répertoire du backend (`backend`), exécute les commandes suivantes :
-
-```bash
-cd backend
-npm install
-```
-
-### 3. Lancer le serveur
-
-```bash
-npm start
-```
-
-Cela démarre le serveur Node.js, qui écoute les requêtes sur le port `3000` par défaut.
 
 ### 4. Installation des dépendances frontend
 

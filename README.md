@@ -2,7 +2,7 @@
 
 ## Description
 
-AlphaCare est une application mobile développée avec Flutter, visant à améliorer la gestion des soins des enfants. Elle offre une plateforme où les médecins et les parents peuvent se connecter et interagir facilement. L'application inclut des interfaces pour les comptes des médecins et des parents, permettant une gestion efficace des informations de santé et des rendez-vous.
+AlphaCare est une application mobile développée avec Flutter, visant à améliorer la gestion des soins des Bébés. Elle offre une plateforme où les médecins et les parents peuvent se connecter et interagir facilement. L'application inclut des interfaces pour les comptes des médecins et des parents, permettant une gestion efficace des informations de santé et des rendez-vous.
 
 ## Fonctionnalités principales
 
